@@ -2,7 +2,7 @@ version: '3'
 services:
   game:
     container_name: shop-data
-    image: pkhamdee/shop-api:1.0
+    image: pkhamdee/shop-api:1.1
     env_file:
       - .env
     ports:
