@@ -15,8 +15,8 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('should return "Hi there! This is shop-data api"', () => {
+      expect(appController.getHello()).toBe('Hi there! This is shop-data api');
     });
   });
 });

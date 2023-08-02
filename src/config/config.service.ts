@@ -28,6 +28,11 @@ export class ConfigService {
     const mode = this.getValue('MODE', false);
     return mode != 'DEV';
   }
+
+  public isOtelEnable() {
+    const otel = this.getValue('OTEL_ENABLE', false);
+    return otel != 'false';
+  }
 }
 
 const configService = new ConfigService(process.env)
@@ -48,7 +53,8 @@ export const dataSourceOptions: DataSourceOptions = {
     host: configService.getValue('POSTGRES_HOST'),
     entities: ['dist/**/*.entity.js'],
     migrations: ['dist/db/migrations/*.js'],
-    ssl: configService.isProduction(),
+    //ssl: configService.isProduction(),
+    synchronize: true
 }; 
 
 const dataSource = new DataSource(dataSourceOptions);

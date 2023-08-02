@@ -13,7 +13,7 @@ export class PlayersController {
   }
 
   @Get()
-  findAll() {
+  findAll(){
     return this.playersService.findAll();
   }
 

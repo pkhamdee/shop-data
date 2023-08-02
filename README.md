@@ -19,7 +19,7 @@ nest g resource merchant
 npm install --save class-validator class-transformer
 
 #Creating a migration
-npm run migration:generate -- db/migrations/AddMerchant
+npm run migration:generate -- db/migrations/InitMerchant
 npm run typeorm -- migration:run
 
 #documenting with OpenAPI

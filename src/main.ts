@@ -1,14 +1,25 @@
+
+import { configService } from './config/config.service';
+import { initTelemetry } from './tracing'
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { configService } from './config/config.service';
 import { ValidationPipe } from '@nestjs/common';
 
+if (!configService.isOtelEnable()) {
+  initTelemetry({
+    appName: configService.getValue('APP_NAME'),
+    svcName: configService.getValue('APP_SERVICE_NAME'),
+    telemetryUrl: configService.getValue('OTEL_COLLECTOR_URL'),
+  })
+}
+
 async function bootstrap() {
+
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());  
+  app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
-    allowedHeaders:"*",
+    allowedHeaders: "*",
     origin: "*"
   });
 
@@ -23,6 +34,5 @@ async function bootstrap() {
 
   await app.listen(configService.getPort());
 }
-
 
 bootstrap();
