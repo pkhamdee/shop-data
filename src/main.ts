@@ -6,7 +6,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 
-if (!configService.isOtelEnable()) {
+if (configService.isOtelEnable()) {
   initTelemetry({
     appName: configService.getValue('APP_NAME'),
     svcName: configService.getValue('APP_SERVICE_NAME'),
