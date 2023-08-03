@@ -1,6 +1,6 @@
 import { W3CTraceContextPropagator } from '@opentelemetry/core'
 import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node'
-import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base'
+import { BatchSpanProcessor,SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base'
 import { registerInstrumentations } from '@opentelemetry/instrumentation'
 import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api'
 import { Resource } from '@opentelemetry/resources'
@@ -34,7 +34,7 @@ export const initTelemetry = (config: {
 
   // The batch span provider is more efficient than the basic provider. This will batch sends to
   // the exporter you have configured
-  provider.addSpanProcessor(new BatchSpanProcessor(exporter))
+  provider.addSpanProcessor(new SimpleSpanProcessor(exporter))
 
   // Initialize the propagator
   provider.register({
@@ -43,6 +43,10 @@ export const initTelemetry = (config: {
 
   // Registering instrumentations / plugins
   registerInstrumentations({
-    instrumentations: getNodeAutoInstrumentations(),
+    instrumentations: getNodeAutoInstrumentations({
+      '@opentelemetry/instrumentation-fs': {
+        enabled: false,
+      },
+    }),
   })
 }

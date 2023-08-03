@@ -1,11 +1,6 @@
 
 import { configService } from './config/config.service';
 import { initTelemetry } from './tracing'
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
-
 if (configService.isOtelEnable()) {
   initTelemetry({
     appName: configService.getValue('APP_NAME'),
@@ -13,6 +8,13 @@ if (configService.isOtelEnable()) {
     telemetryUrl: configService.getValue('OTEL_COLLECTOR_URL'),
   })
 }
+
+
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
+
 
 async function bootstrap() {
 
