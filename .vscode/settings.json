@@ -1,1 +1,5 @@
-{}
+{
+    "tanzu.namespace": "dev-live",
+    "tanzu.sourceImage": "tanzuplaycaa.azurecr.io/dev-live/shop-data-source",
+    "tanzu.selectedNamespaces": "dev-live"
+}

@@ -1,0 +1,60 @@
+apiVersion: carto.run/v1alpha1
+kind: Workload
+metadata:
+  name: shop-data
+  namespace: dev-live
+  labels:
+    apps.tanzu.vmware.com/workload-type: web
+    app.kubernetes.io/part-of: shop-data
+spec:
+  env:
+  # TODO: DB secrets to be removed once Service Binding is enabled
+  # The referenced secret is based on the Classclaim-created secret
+  - name: POSTGRES_HOST
+    valueFrom:
+      secretKeyRef:
+        name: dfd5490c-7d41-46fe-93dd-3ec5e5cce03b
+        key: host
+  - name: POSTGRES_PORT
+    valueFrom:
+      secretKeyRef:
+        name: dfd5490c-7d41-46fe-93dd-3ec5e5cce03b
+        key: port
+  - name: POSTGRES_DATABASE
+    valueFrom:
+      secretKeyRef:
+        name: dfd5490c-7d41-46fe-93dd-3ec5e5cce03b
+        key: database   
+  - name: POSTGRES_USER
+    valueFrom:
+      secretKeyRef:
+        name: dfd5490c-7d41-46fe-93dd-3ec5e5cce03b
+        key: username
+  - name: POSTGRES_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: dfd5490c-7d41-46fe-93dd-3ec5e5cce03b
+        key: password
+  - name: APP_NAME
+    value: shop-data
+  - name: APP_SERVICE_NAME
+    value: backend
+  - name: OTEL_COLLECTOR_URL
+    value: http://localhost:4318/v1/traces
+  - name: MODE
+    value: DEV
+  params:
+    - name: annotations
+      value:
+        autoscaling.knative.dev/minScale: "1"
+    - name: clusterBuilder
+      value: full        
+  build:
+    env:
+      - name: BP_NODE_RUN_SCRIPTS
+        value: "build"       
+  source:
+    git:
+      url: https://github.com/pkhamdee/shop-data.git
+      ref:
+        branch: main

@@ -1,0 +1,12 @@
+apiVersion: services.apps.tanzu.vmware.com/v1alpha1
+kind: ClassClaim
+metadata:
+  name: psql
+  namespace: dev-live
+spec:
+  classRef:
+    name: postgresql-unmanaged
+  parameters:
+    storageGB: 1
+
+
