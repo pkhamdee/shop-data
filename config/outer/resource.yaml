@@ -2,7 +2,7 @@ apiVersion: services.apps.tanzu.vmware.com/v1alpha1
 kind: ClassClaim
 metadata:
   name: psql
-  namespace: sg-vbc
+  namespace: price-game
 spec:
   classRef:
     name: postgresql-unmanaged

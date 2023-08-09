@@ -8,32 +8,39 @@ metadata:
     app.kubernetes.io/part-of: shop-data
 spec:
   env:
-  # TODO: DB secrets to be removed once Service Binding is enabled
   # The referenced secret is based on the Classclaim-created secret
+  # TODO: DB secrets to be removed once Service Binding is enabled
+  # In the meantime - perform the following:
+  # kubectl patch secret ${CROSSPLANE_SECRET_NAME} \
+  #   --type=json \
+  #   --patch="[{ 'op': 'replace', 'path': '/metadata/name', 'value': 'shop-data-secrets' }, {'op': 'remove', 'path': '/metadata/resourceVersion'}, {'op': 'remove', 'path': '/metadata/uid'}]" \
+  #   --dry-run=client \
+  #   --namespace dev-live \
+  #   -o yaml | kubectl apply -f -  
   - name: POSTGRES_HOST
     valueFrom:
       secretKeyRef:
-        name: dfd5490c-7d41-46fe-93dd-3ec5e5cce03b
+        name: shop-data-secrets
         key: host
   - name: POSTGRES_PORT
     valueFrom:
       secretKeyRef:
-        name: dfd5490c-7d41-46fe-93dd-3ec5e5cce03b
+        name: shop-data-secrets
         key: port
   - name: POSTGRES_DATABASE
     valueFrom:
       secretKeyRef:
-        name: dfd5490c-7d41-46fe-93dd-3ec5e5cce03b
+        name: shop-data-secrets
         key: database   
   - name: POSTGRES_USER
     valueFrom:
       secretKeyRef:
-        name: dfd5490c-7d41-46fe-93dd-3ec5e5cce03b
+        name: shop-data-secrets
         key: username
   - name: POSTGRES_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: dfd5490c-7d41-46fe-93dd-3ec5e5cce03b
+        name: shop-data-secrets
         key: password
   - name: APP_NAME
     value: shop-data
@@ -46,13 +53,17 @@ spec:
   params:
     - name: annotations
       value:
-        autoscaling.knative.dev/minScale: "1"
+        autoscaling.knative.dev/minScale: "1" 
     - name: clusterBuilder
-      value: full        
+      value: full-jammy        
+    - name: testing_pipeline_matching_labels
+      value:
+        apps.tanzu.vmware.com/pipeline: test
+        apps.tanzu.vmware.com/language: nodejs
   build:
     env:
       - name: BP_NODE_RUN_SCRIPTS
-        value: "build"       
+        value: "build" 
   source:
     git:
       url: https://github.com/pkhamdee/shop-data.git
