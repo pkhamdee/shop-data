@@ -1,4 +1,16 @@
 apiVersion: v1
+kind: Secret
+metadata:
+  name: npmrc
+  namespace: dev-live
+type: service.binding/npmrc
+stringData:
+  type: npmrc
+  provider: npmrc
+  .npmrc: |
+    registry=https://registry.npmjs.com
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: shop-data-config

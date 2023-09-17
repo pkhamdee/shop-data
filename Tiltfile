@@ -1,7 +1,8 @@
 SOURCE_IMAGE = os.getenv("SOURCE_IMAGE", default='dev.local/tanzu-java-web-app-source')
 LOCAL_PATH = os.getenv("LOCAL_PATH", default='.')
 NAMESPACE = os.getenv("NAMESPACE", default='default')
-OUTPUT_TO_NULL_COMMAND = os.getenv("OUTPUT_TO_NULL_COMMAND", default=' > /dev/null ')
+
+update_settings (k8s_upsert_timeout_secs = 120) 
 
 local_resource(
     'build',
@@ -9,16 +10,20 @@ local_resource(
     deps=['./src'],
 )
 
-k8s_yaml(['config/resource.yaml', 'config/config.yaml'])
-
 k8s_custom_deploy(
     'shop-data',
-    apply_cmd="tanzu apps workload apply -f config/workload.yaml --update-strategy replace --debug --live-update" +
+     apply_cmd="tanzu apps workload apply -f config/workload.yaml --update-strategy replace --debug --live-update" +
                " --local-path " + LOCAL_PATH +
-               " --namespace " + NAMESPACE +
+               " --namespace " + "dev-live" +
                " --yes " +
-               OUTPUT_TO_NULL_COMMAND +
-               " && kubectl get workload shop-data --namespace " + NAMESPACE + " -o yaml",
+               "> /dev/null" +
+                " && kubectl get workload shop-data --namespace " + "dev-live" + " -o yaml",
+     apply_cmd_bat="tanzu apps workload apply -f config/workload.yaml --update-strategy replace --debug --live-update" +
+              " --local-path " + LOCAL_PATH +
+              " --namespace " + "dev-live" +
+              " --yes " +
+              "> NUL" +
+              " && kubectl get workload shop-data --namespace " + "dev-live" + " -o yaml",              
     delete_cmd="tanzu apps workload delete -f config/workload.yaml --namespace " + NAMESPACE + " --yes",
     deps=['./dist'],
     container_selector='workload',

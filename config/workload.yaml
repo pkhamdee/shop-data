@@ -8,14 +8,6 @@ metadata:
     app.kubernetes.io/part-of: shop-data
 spec:
   env:
-  # TODO: DB secrets to be removed once Service Binding is enabled
-  # In the meantime - perform the following:
-  # kubectl patch secret ${CROSSPLANE_SECRET_NAME} \
-  #   --type=json \
-  #   --patch="[{ 'op': 'replace', 'path': '/metadata/name', 'value': 'shop-data-secrets' }, {'op': 'remove', 'path': '/metadata/resourceVersion'}, {'op': 'remove', 'path': '/metadata/uid'}]" \
-  #   --dry-run=client \
-  #   --namespace dev-live \
-  #   -o yaml | kubectl apply -f -  
   - name: POSTGRES_HOST
     valueFrom:
       secretKeyRef:
@@ -69,10 +61,10 @@ spec:
         autoscaling.knative.dev/minScale: "1" 
     - name: clusterBuilder
       value: full-jammy        
-    - name: testing_pipeline_matching_labels
+    - name: buildServiceBindings
       value:
-        apps.tanzu.vmware.com/pipeline: test
-        apps.tanzu.vmware.com/language: nodejs
+      - kind: Secret
+        name: npmrc
   build:
     env:
       - name: BP_NODE_RUN_SCRIPTS

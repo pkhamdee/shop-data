@@ -1,12 +1,12 @@
 ### Git ###
-.git/
+.git
 
 ### Node ###
-node_modules/
-dist/
+node_modules
+dist
 
 ### VS Code ###
-.vscode/
+.vscode
 
 ### Tilt ###
 Tiltfile
